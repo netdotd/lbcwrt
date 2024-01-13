@@ -1,18 +1,16 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
+# See /LICENSE for more information. 
 #
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
-PKG_VERSION:=2023.07.02
-PKG_RELEASE:=1
-PKG_HASH:=6b6a48581c14abb0f95bd87c1af4d740922406d7b801002a9f94727fdde021d5
+PKG_VERSION:=2022.07
+PKG_RELEASE:=$(AUTORELEASE)
+
+PKG_HASH:=92b08eb49c24da14c1adbf70a71ae8f37cc53eeb4230e859ad8b6733d13dcf5e
 
 PKG_MAINTAINER:=Tobias Maedel <openwrt@tbspace.de>
-
-UBOOT_USE_BINMAN:=1
-UBOOT_USE_INTREE_DTC:=1
 
 include $(INCLUDE_DIR)/u-boot.mk
 include $(INCLUDE_DIR)/package.mk
@@ -26,152 +24,189 @@ endef
 
 # RK3328 boards
 
-define U-Boot/rk3328/Default
-  BUILD_SUBTARGET:=armv8
-  DEPENDS:=+PACKAGE_u-boot-$(1):trusted-firmware-a-rk3328
-  ATF:=rk3328_bl31.elf
-endef
-
-define U-Boot/nanopi-r2c-rk3328
-  $(U-Boot/rk3328/Default)
-  NAME:=NanoPi R2C
-  BUILD_DEVICES:= \
-    friendlyarm_nanopi-r2c
-endef
-
 define U-Boot/nanopi-r2s-rk3328
-  $(U-Boot/rk3328/Default)
+  BUILD_SUBTARGET:=armv8
   NAME:=NanoPi R2S
   BUILD_DEVICES:= \
-    friendlyarm_nanopi-r2s
+    friendlyarm_nanopi-r2s \
+    friendlyarm_nanopi-neo3
+  DEPENDS:=+PACKAGE_u-boot-nanopi-r2s-rk3328:arm-trusted-firmware-rk3328
+  PKG_BUILD_DEPENDS:=arm-trusted-firmware-rockchip-vendor
+  ATF:=rk322xh_bl31_v1.49.elf
+  USE_RKBIN:=1
 endef
 
-define U-Boot/orangepi-r1-plus-rk3328
-  $(U-Boot/rk3328/Default)
-  NAME:=Orange Pi R1 Plus
+define U-Boot/doornet1-rk3328
+  BUILD_SUBTARGET:=armv8
+  NAME:=DoorNet1
   BUILD_DEVICES:= \
-    xunlong_orangepi-r1-plus
-endef
-
-define U-Boot/orangepi-r1-plus-lts-rk3328
-  $(U-Boot/rk3328/Default)
-  NAME:=Orange Pi R1 Plus LTS
-  BUILD_DEVICES:= \
-    xunlong_orangepi-r1-plus-lts
-endef
-
-define U-Boot/roc-cc-rk3328
-  $(U-Boot/rk3328/Default)
-  NAME:=ROC-RK3328-CC
-  BUILD_DEVICES:= \
-    firefly_roc-rk3328-cc
-endef
-
-define U-Boot/rock64-rk3328
-  $(U-Boot/rk3328/Default)
-  NAME:=Rock64
-  BUILD_DEVICES:= \
-    pine64_rock64
-endef
-
-define U-Boot/rock-pi-e-rk3328
-  $(U-Boot/rk3328/Default)
-  NAME:=ROCK Pi E
-  BUILD_DEVICES:= \
-    radxa_rock-pi-e
+    embedfire_doornet1
+  DEPENDS:=+PACKAGE_u-boot-doornet1-rk3328:arm-trusted-firmware-rk3328
+  PKG_BUILD_DEPENDS:=arm-trusted-firmware-rockchip-vendor
+  ATF:=rk322xh_bl31_v1.49.elf
+  USE_RKBIN:=1
 endef
 
 # RK3399 boards
 
-define U-Boot/rk3399/Default
+define U-Boot/doornet2-rk3399
   BUILD_SUBTARGET:=armv8
-  DEPENDS:=+PACKAGE_u-boot-$(1):trusted-firmware-a-rk3399
+  NAME:=DoorNet2
+  BUILD_DEVICES:= \
+    embedfire_doornet2
+  DEPENDS:=+PACKAGE_u-boot-doornet2-rk3399:arm-trusted-firmware-rockchip
+  PKG_BUILD_DEPENDS:=arm-trusted-firmware-rockchip
   ATF:=rk3399_bl31.elf
 endef
 
-define U-Boot/nanopc-t4-rk3399
-  $(U-Boot/rk3399/Default)
-  NAME:=NanoPC T4
-  BUILD_DEVICES:= \
-    friendlyarm_nanopc-t4
-endef
-
 define U-Boot/nanopi-r4s-rk3399
-  $(U-Boot/rk3399/Default)
+  BUILD_SUBTARGET:=armv8
   NAME:=NanoPi R4S
   BUILD_DEVICES:= \
     friendlyarm_nanopi-r4s
+  DEPENDS:=+PACKAGE_u-boot-nanopi-r4s-rk3399:arm-trusted-firmware-rk3399
+  PKG_BUILD_DEPENDS:=arm-trusted-firmware-rockchip-vendor
+  ATF:=rk3399_bl31_v1.35.elf
+  USE_RKBIN:=1
+endef
+
+define U-Boot/lubancat-zero-n-rk3566
+  BUILD_SUBTARGET:=armv8
+  NAME:=LubanCat Zero N
+  BUILD_DEVICES:= \
+    embedfire_lubancat-zero-n
+  DEPENDS:=+PACKAGE_u-boot-lubancat-zero-n-rk3566:arm-trusted-firmware-rk3566
+  PKG_BUILD_DEPENDS:=arm-trusted-firmware-rockchip-vendor
+  ATF:=rk3568_bl31_v1.28.elf
+  DDR:=rk3566_ddr_1056MHz_v1.13.bin
+endef
+
+define U-Boot/lubancat1-rk3566
+  BUILD_SUBTARGET:=armv8
+  NAME:=LubanCat1
+  BUILD_DEVICES:= \
+    embedfire_lubancat1
+  DEPENDS:=+PACKAGE_u-boot-lubancat1-rk3566:arm-trusted-firmware-rk3566
+  PKG_BUILD_DEPENDS:=arm-trusted-firmware-rockchip-vendor
+  ATF:=rk3568_bl31_v1.28.elf
+  DDR:=rk3566_ddr_1056MHz_v1.13.bin
+endef
+
+define U-Boot/lubancat1n-rk3566
+  BUILD_SUBTARGET:=armv8
+  NAME:=LubanCat1N
+  BUILD_DEVICES:= \
+    embedfire_lubancat1n
+  DEPENDS:=+PACKAGE_u-boot-lubancat1n-rk3566:arm-trusted-firmware-rk3566
+  PKG_BUILD_DEPENDS:=arm-trusted-firmware-rockchip-vendor
+  ATF:=rk3568_bl31_v1.28.elf
+  DDR:=rk3566_ddr_1056MHz_v1.13.bin
+endef
+
+define U-Boot/rock-3a-rk3568
+  BUILD_SUBTARGET:=armv8
+  NAME:=ROCK-3A
+  BUILD_DEVICES:= \
+    radxa_rock-3a
+  DEPENDS:=+PACKAGE_u-boot-rock-3a-rk3568:arm-trusted-firmware-rk3568
+  PKG_BUILD_DEPENDS:=arm-trusted-firmware-rockchip-vendor
+  ATF:=rk3568_bl31_v1.28.elf
+  DDR:=rk3568_ddr_1560MHz_v1.13.bin
 endef
 
 define U-Boot/rock-pi-4-rk3399
-  $(U-Boot/rk3399/Default)
+  BUILD_SUBTARGET:=armv8
   NAME:=Rock Pi 4
   BUILD_DEVICES:= \
-    radxa_rock-pi-4a
+    radxa_rock-pi-4
+  DEPENDS:=+PACKAGE_u-boot-rock-pi-4-rk3399:arm-trusted-firmware-rockchip
+  PKG_BUILD_DEPENDS:=arm-trusted-firmware-rockchip
+  ATF:=rk3399_bl31.elf
 endef
 
 define U-Boot/rockpro64-rk3399
-  $(U-Boot/rk3399/Default)
+  BUILD_SUBTARGET:=armv8
   NAME:=RockPro64
   BUILD_DEVICES:= \
     pine64_rockpro64
+  DEPENDS:=+PACKAGE_u-boot-rockpro64-rk3399:arm-trusted-firmware-rockchip
+  PKG_BUILD_DEPENDS:=arm-trusted-firmware-rockchip
+  ATF:=rk3399_bl31.elf
 endef
 
-
-# RK3568 boards
-
-define U-Boot/rk3568/Default
+define U-Boot/lubancat2-rk3568
   BUILD_SUBTARGET:=armv8
-  DEPENDS:=+PACKAGE_u-boot-$(1):trusted-firmware-a-rk3568
-  ATF:=rk3568_bl31_v1.43.elf
-  TPL:=rk3568_ddr_1560MHz_v1.18.bin
+  NAME:=LubanCat2
+  BUILD_DEVICES:= \
+    embedfire_lubancat2
+  DEPENDS:=+PACKAGE_u-boot-lubancat2-rk3568:arm-trusted-firmware-rk3568
+  PKG_BUILD_DEPENDS:=arm-trusted-firmware-rockchip-vendor
+  ATF:=rk3568_bl31_v1.28.elf
+  DDR:=rk3568_ddr_1560MHz_v1.13.bin
 endef
 
-define U-Boot/nanopi-r5c-rk3568
-  $(U-Boot/rk3568/Default)
-  NAME:=NanoPi R5C
+define U-Boot/lubancat2n-rk3568
+  BUILD_SUBTARGET:=armv8
+  NAME:=LubanCat2N
   BUILD_DEVICES:= \
-    friendlyarm_nanopi-r5c
+    embedfire_lubancat2n
+  DEPENDS:=+PACKAGE_u-boot-lubancat2n-rk3568:arm-trusted-firmware-rk3568
+  PKG_BUILD_DEPENDS:=arm-trusted-firmware-rockchip-vendor
+  ATF:=rk3568_bl31_v1.28.elf
+  DDR:=rk3568_ddr_1560MHz_v1.13.bin
 endef
 
-define U-Boot/nanopi-r5s-rk3568
-  $(U-Boot/rk3568/Default)
-  NAME:=NanoPi R5S
+define U-Boot/lubancat2io-rk3568
+  BUILD_SUBTARGET:=armv8
+  NAME:=LubanCat2IO
   BUILD_DEVICES:= \
-    friendlyarm_nanopi-r5s
+    embedfire_lubancat2io
+  DEPENDS:=+PACKAGE_u-boot-lubancat2io-rk3568:arm-trusted-firmware-rk3568
+  PKG_BUILD_DEPENDS:=arm-trusted-firmware-rockchip-vendor
+  ATF:=rk3568_bl31_v1.28.elf
+  DDR:=rk3568_ddr_1560MHz_v1.13.bin
 endef
 
 UBOOT_TARGETS := \
-  nanopc-t4-rk3399 \
-  nanopi-r4s-rk3399 \
-  rock-pi-4-rk3399 \
-  rockpro64-rk3399 \
-  nanopi-r2c-rk3328 \
+  doornet1-rk3328 \
+  doornet2-rk3399 \
+  lubancat-zero-n-rk3566 \
+  lubancat1-rk3566 \
+  lubancat1n-rk3566 \
+  lubancat2-rk3568 \
+  lubancat2n-rk3568 \
+  lubancat2io-rk3568 \
   nanopi-r2s-rk3328 \
-  orangepi-r1-plus-rk3328 \
-  orangepi-r1-plus-lts-rk3328 \
-  roc-cc-rk3328 \
-  rock64-rk3328 \
-  rock-pi-e-rk3328 \
-  nanopi-r5c-rk3568 \
-  nanopi-r5s-rk3568
+  nanopi-r4s-rk3399 \
+  rock-3a-rk3568 \
+  rock-pi-4-rk3399 \
+  rockpro64-rk3399
 
 UBOOT_CONFIGURE_VARS += USE_PRIVATE_LIBGCC=yes
 
-UBOOT_CUSTOMIZE_CONFIG := \
-	--disable SPL_FIT_SIGNATURE \
-	--disable TOOLS_MKEFICAPSULE \
-	--set-str MKIMAGE_DTC_PATH $(PKG_BUILD_DIR)/scripts/dtc/dtc
-
 UBOOT_MAKE_FLAGS += \
-  PATH=$(STAGING_DIR_HOST)/bin:$(PATH) \
-  BL31=$(STAGING_DIR_IMAGE)/$(ATF) \
-  $(if $(TPL),ROCKCHIP_TPL=$(STAGING_DIR_IMAGE)/$(TPL))
+  BL31=$(STAGING_DIR_IMAGE)/$(ATF)
+
+define Build/Configure
+	$(call Build/Configure/U-Boot)
+
+	$(SED) 's/CONFIG_TOOLS_LIBCRYPTO=y/# CONFIG_TOOLS_LIBCRYPTO is not set/' $(PKG_BUILD_DIR)/.config
+	$(SED) 's#CONFIG_MKIMAGE_DTC_PATH=.*#CONFIG_MKIMAGE_DTC_PATH="$(PKG_BUILD_DIR)/scripts/dtc/dtc"#g' $(PKG_BUILD_DIR)/.config
+	echo 'CONFIG_IDENT_STRING=" OpenWrt"' >> $(PKG_BUILD_DIR)/.config
+ifneq ($(DDR),)
+	$(CP) $(STAGING_DIR_IMAGE)/$(DDR) $(PKG_BUILD_DIR)/ram_init.bin
+endif
+endef
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(STAGING_DIR_IMAGE)
+ifneq ($(USE_RKBIN),)
+	$(STAGING_DIR_IMAGE)/loaderimage --pack --uboot $(PKG_BUILD_DIR)/u-boot-dtb.bin $(PKG_BUILD_DIR)/uboot.img 0x200000
+	$(CP) $(PKG_BUILD_DIR)/uboot.img $(STAGING_DIR_IMAGE)/$(BUILD_VARIANT)-uboot.img
+else
 	$(CP) $(PKG_BUILD_DIR)/idbloader.img $(STAGING_DIR_IMAGE)/$(BUILD_VARIANT)-idbloader.img
 	$(CP) $(PKG_BUILD_DIR)/u-boot.itb $(STAGING_DIR_IMAGE)/$(BUILD_VARIANT)-u-boot.itb
+endif
 endef
 
 define Package/u-boot/install/default
